@@ -16,19 +16,17 @@ FILES_DIFF="${NEW_DIR}/changes-$DATE"
 LAST_BACKUP="${DRIVE}/${AVAILABLE_BACKUPS[-1]}"
 
 case "$OPTS" in
-		-f)
+		-f|--force)
 		FORCE=1;
 		;;
-		--force)
-		FORCE=1;
-		;;
-		-a)
+		-a|--available)
 		for a in ${AVAILABLE_BACKUPS[@]}; do
 			printf '%s\n' $a;
 		done
 		exit;
 		;;
-		*) FORCE=0;
+		*)
+		FORCE=0;
 		;;
 esac
 
