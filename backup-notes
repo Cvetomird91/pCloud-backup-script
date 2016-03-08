@@ -8,7 +8,10 @@ DRIVE="${HOME}/pCloudDrive";
 NEW_DIR="${DRIVE}/notes-$DATE";
 NOTES="${DRIVE}/notes/*";
 
-AVAILABLE_BACKUPS=($( ls -1 ${DRIVE} | egrep -o notes-[0-9]{2}\\.[0-9]{2}\\.[0-9]{4} | sort -t. -k +3n | sort -t. -k +2n ))
+AVAILABLE_BACKUPS=($( ls -1 ${DRIVE} \
+					| egrep -o notes-[0-9]{2}\\.[0-9]{2}\\.[0-9]{4} \
+					| sort -t. -k +3n \
+					| sort -t. -k +2n ))
 
 #files
 LINE_COUNT_FILE="line_count";
