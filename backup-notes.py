@@ -22,6 +22,4 @@ new_dir = 'notes-' + current_date
 for file in files:
     matchObj = re.match(r'notes-\d{2}\.\d{2}\.\d{4}$', file)
     if matchObj:
-        print(file)
-
-print(notes)
+        available_backups.append(file)
