@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-import os
+import os, shutil
 import datetime
 import pathlib
 import re
+import difflib
 import argparse, getopt
 import sys, traceback
 
@@ -27,12 +28,24 @@ for file in files:
 
 last_backup = available_backups[-1]
 
-print(available_backups)
+arguments = argparse.ArgumentParser(description='Process options')
+#arguments.add_argument('-a', '--available', help='list available backups', nargs='?')
+#args = arguments.parse_args()
 
-#os.mkdir(new_dir, 0600)
+arguments.add_argument("--available", "-a", action='store_true')
+args = arguments.parse_args()
+
+if args.available:
+    for backup in available_backups:
+        print(backup)
+    sys.exit(1)
+
+if not os.path.exists(new_dir):
+    shutil.copytree(notes_path, new_dir)
 
 # year = file[12:]
 # month = file[9:11]
 # http://www.cyberciti.biz/faq/python-command-line-arguments-argv-example/
-if not os.path.isdir(new_dir):
-    os.mkdir(new_dir, 600)
+# http://stackoverflow.com/questions/123198/how-do-i-copy-a-file-in-python
+# http://pythoncentral.io/how-to-recursively-copy-a-directory-folder-in-python/
+# https://mkaz.tech/python-argparse-cookbook.html
