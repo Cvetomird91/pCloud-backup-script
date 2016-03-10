@@ -4,6 +4,7 @@ import os
 import datetime
 import pathlib
 import re
+import argparse, getopt
 import sys, traceback
 
 user_home = os.getenv("HOME")
@@ -20,11 +21,6 @@ current_date = date.strftime('%d.%m.%Y')
 new_dir = 'notes-' + current_date
 
 for file in files:
-<<<<<<< HEAD
-    matchObj = re.match(r'notes-\d{2}\.\d{2}\.\d{4}$', file)
-    if matchObj:
-        available_backups.append(file)
-=======
     matchObj = re.match(r'^notes-\d{2}\.\d{2}\.\d{4}$', file)
     if matchObj:
         available_backups.append(file)
@@ -40,4 +36,3 @@ print(available_backups)
 # http://www.cyberciti.biz/faq/python-command-line-arguments-argv-example/
 if not os.path.isdir(new_dir):
     os.mkdir(new_dir, 600)
->>>>>>> 67939b86f1eceed33030eef4a3d076f9d6deb23b
