@@ -2,10 +2,9 @@
 
 import os, shutil
 import datetime
-import pathlib
 import re
 import difflib
-import argparse, getopt
+import argparse
 import sys, traceback
 
 user_home = os.getenv("HOME")
@@ -20,6 +19,8 @@ available_backups = []
 date = datetime.datetime.now()
 current_date = date.strftime('%d.%m.%Y')
 new_dir = 'notes-' + current_date
+lines_count = 'lines_count-' + current_date
+changes_file = 'changes-' + current_date
 
 for file in files:
     matchObj = re.match(r'^notes-\d{2}\.\d{2}\.\d{4}$', file)
@@ -29,10 +30,8 @@ for file in files:
 last_backup = available_backups[-1]
 
 arguments = argparse.ArgumentParser(description='Process options')
-#arguments.add_argument('-a', '--available', help='list available backups', nargs='?')
-#args = arguments.parse_args()
-
-arguments.add_argument("--available", "-a", action='store_true')
+arguments.add_argument('--available', '-a', action='store_true')
+arguments.add_argument('--force', '-f', action='store_true')
 args = arguments.parse_args()
 
 if args.available:
@@ -40,8 +39,15 @@ if args.available:
         print(backup)
     sys.exit(1)
 
-if not os.path.exists(new_dir):
-    shutil.copytree(notes_path, new_dir)
+if args.force:
+    if os.path.exists(new_dir):
+        shutil.rmtree(new_dir)
+        shutil.copytree(notes_path, new_dir)
+else:
+    if not os.path.exists(new_dir):
+        shutil.copytree(notes_path, new_dir)
+    else:
+        print('Daily backup already created!')
 
 # year = file[12:]
 # month = file[9:11]
