@@ -12,6 +12,9 @@ drive_dir = '/pCloudDrive/'
 drive_path = user_home + drive_dir
 notes_path = drive_path + 'notes/'
 
+print(notes_path)
+sys.exit(0)
+
 notes = os.listdir(notes_path)
 files = os.listdir(drive_path)
 available_backups = []
@@ -39,13 +42,25 @@ if args.available:
         print(backup)
     sys.exit(1)
 
+def create_line_count(directory, line_count_file):
+    for filename in os.listdir(directory):
+        if filename != 'lines' and not os.path.isdir(filename):
+            num_lines = sum(1 for line in open(filename))
+            line_count = str(num_lines) + ' ' + filename
+            print(line_count)
+            '''file = open('lines', 'a+')
+            file.write(line_count + '\n')
+            file.close'''
+
 if args.force:
     if os.path.exists(new_dir):
         shutil.rmtree(new_dir)
         shutil.copytree(notes_path, new_dir)
+        create_line_count(notes_path, lines_count)
 else:
     if not os.path.exists(new_dir):
         shutil.copytree(notes_path, new_dir)
+        create_line_count(notes_path, lines_count)
     else:
         print('Daily backup already created!')
 
