@@ -12,17 +12,14 @@ drive_dir = '/pCloudDrive/'
 drive_path = user_home + drive_dir
 notes_path = drive_path + 'notes/'
 
-print(notes_path)
-sys.exit(0)
-
 notes = os.listdir(notes_path)
 files = os.listdir(drive_path)
 available_backups = []
 
 date = datetime.datetime.now()
 current_date = date.strftime('%d.%m.%Y')
-new_dir = 'notes-' + current_date
-lines_count = 'lines_count-' + current_date
+new_dir = drive_path + 'notes-' + current_date + '/'
+lines_count = new_dir + 'lines_count-' + current_date
 changes_file = 'changes-' + current_date
 
 for file in files:
@@ -43,14 +40,15 @@ if args.available:
     sys.exit(1)
 
 def create_line_count(directory, line_count_file):
+    os.chdir(directory)
     for filename in os.listdir(directory):
-        if filename != 'lines' and not os.path.isdir(filename):
+        if filename != line_count_file and not os.path.isdir(filename):
             num_lines = sum(1 for line in open(filename))
             line_count = str(num_lines) + ' ' + filename
             print(line_count)
-            '''file = open('lines', 'a+')
+            file = open(line_count_file, 'a+')
             file.write(line_count + '\n')
-            file.close'''
+            file.close
 
 if args.force:
     if os.path.exists(new_dir):
@@ -63,10 +61,3 @@ else:
         create_line_count(notes_path, lines_count)
     else:
         print('Daily backup already created!')
-
-# year = file[12:]
-# month = file[9:11]
-# http://www.cyberciti.biz/faq/python-command-line-arguments-argv-example/
-# http://stackoverflow.com/questions/123198/how-do-i-copy-a-file-in-python
-# http://pythoncentral.io/how-to-recursively-copy-a-directory-folder-in-python/
-# https://mkaz.tech/python-argparse-cookbook.html
