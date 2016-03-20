@@ -53,8 +53,7 @@ done
 
 echo "copying files:"
 for y in ${NOTES[@]}; do
-	#cp -v "$y" "${NEW_DIR}/";
-	echo "$y" "${NEW_DIR}/";
+	cp -v "$y" "${NEW_DIR}/";
 done
 
 for u in ${NOTES[@]}; do
