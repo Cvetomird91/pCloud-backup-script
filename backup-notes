@@ -37,7 +37,7 @@ esac
 if [ ! -d "${NEW_DIR}" ]; then
 	mkdir -v "${NEW_DIR}";
 elif [ $FORCE == 1 ]; then
-	LAST_BACKUP="${DRIVE}/notes-backups/${AVAILABLE_BACKUPS[-2]}"
+	LAST_BACKUP="${DRIVE}/${NOTES_BACKUPS}/${AVAILABLE_BACKUPS[-2]}"
 	rm $FILES_DIFF;
 else
 	printf "Daily Backup already created!\n";
