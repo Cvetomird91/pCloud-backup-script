@@ -50,6 +50,23 @@ def create_line_count(directory, line_count_file):
             file.write(line_count + '\n')
             file.close
 
+def create_diff(file_1, file_2, output_file):
+    with open (file_1, 'r') as left_file:
+        data_left = left_file.readlines()
+        data_left = [x.strip('\n') for x in data_left]
+
+    with open(file_2, 'r') as right_file:
+        data_right = right_file.readlines()
+        data_right = [x.strip('\n') for x in data_right]
+
+    file_handle = open(output_file, 'a+')
+
+    for line in difflib.unified_diff(data_left, data_right):
+        print(line)
+        file_handle.write(line + '\n')
+
+    file_handle.close
+
 if args.force:
     if os.path.exists(new_dir):
         shutil.rmtree(new_dir)
