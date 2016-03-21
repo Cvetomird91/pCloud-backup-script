@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
-import os, shutil
+import os
+import shutil
 import datetime
 import re
 import difflib
 import argparse
-import sys, traceback
+import sys
 
 user_home = os.getenv("HOME")
 drive_dir = '/pCloudDrive/'
@@ -45,7 +46,6 @@ def create_line_count(directory, line_count_file):
         if filename != line_count_file and not os.path.isdir(filename):
             num_lines = sum(1 for line in open(filename))
             line_count = str(num_lines) + ' ' + filename
-            print(line_count)
             file = open(line_count_file, 'a+')
             file.write(line_count + '\n')
             file.close
