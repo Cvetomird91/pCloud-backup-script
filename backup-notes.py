@@ -50,6 +50,7 @@ def create_line_count(directory, line_count_file):
             file.write(line_count + '\n')
             file.close
 
+'''loop over notes filenames and append path name'''
 def create_diff(file_1, file_2, output_file):
     with open (file_1, 'r') as left_file:
         data_left = left_file.readlines()
@@ -62,7 +63,6 @@ def create_diff(file_1, file_2, output_file):
     file_handle = open(output_file, 'a+')
 
     for line in difflib.unified_diff(data_left, data_right):
-        print(line)
         file_handle.write(line + '\n')
 
     file_handle.close
