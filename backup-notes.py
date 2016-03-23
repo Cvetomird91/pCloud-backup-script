@@ -34,6 +34,7 @@ arguments = argparse.ArgumentParser(description='Process options')
 arguments.add_argument('--available', '-a', action='store_true')
 arguments.add_argument('--force', '-f', action='store_true')
 args = arguments.parse_args()
+force_backup = args.force
 
 if args.available:
     for backup in available_backups:
@@ -78,3 +79,12 @@ else:
         create_line_count(notes_path, lines_count)
     else:
         print('Daily backup already created!')
+
+def perform_backup():
+        if force_backup or not os.path.exists(new_dir):
+            if force_backup:
+                shutil.rmtree(notes_path)
+            shutil.copytree(notes_path, new_dir)
+            create_line_count(notes_path, lines_count)
+        else:
+            print('Daily backup already created!')
