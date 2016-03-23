@@ -34,6 +34,7 @@ arguments = argparse.ArgumentParser(description='Process options')
 arguments.add_argument('--available', '-a', action='store_true')
 arguments.add_argument('--force', '-f', action='store_true')
 args = arguments.parse_args()
+force_backup = args.force
 
 if args.available:
     for backup in available_backups:
@@ -50,7 +51,6 @@ def create_line_count(directory, line_count_file):
             file.write(line_count + '\n')
             file.close
 
-'''loop over notes filenames and append path name'''
 def create_diff(file_1, file_2, output_file):
     with open (file_1, 'r') as left_file:
         data_left = left_file.readlines()
@@ -67,14 +67,10 @@ def create_diff(file_1, file_2, output_file):
 
     file_handle.close
 
-if args.force:
-    if os.path.exists(new_dir):
+if force_backup or not os.path.exists(new_dir):
+    if force_backup:
         shutil.rmtree(new_dir)
-        shutil.copytree(notes_path, new_dir)
-        create_line_count(notes_path, lines_count)
+    shutil.copytree(notes_path, new_dir)
+    create_line_count(notes_path, lines_count)
 else:
-    if not os.path.exists(new_dir):
-        shutil.copytree(notes_path, new_dir)
-        create_line_count(notes_path, lines_count)
-    else:
-        print('Daily backup already created!')
+    print('Daily backup already created!')
