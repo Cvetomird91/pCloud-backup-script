@@ -39,7 +39,7 @@ force_backup = args.force
 if args.available:
     for backup in available_backups:
         print(backup)
-    sys.exit(1)
+    sys.exit(0)
 
 def create_line_count(directory, line_count_file):
     os.chdir(directory)
