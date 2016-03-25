@@ -39,10 +39,10 @@ force_backup = args.force
 if args.available:
     for backup in available_backups:
         print(backup)
-    sys.exit(1)
+    sys.exit(0)
 
 def create_line_count(directory, line_count_file):
-    os.chdir(directory)
+    directory = os.path.realpath(directory)
     for filename in os.listdir(directory):
         if filename != line_count_file and not os.path.isdir(filename):
             num_lines = sum(1 for line in open(filename))
@@ -51,25 +51,32 @@ def create_line_count(directory, line_count_file):
             file.write(line_count + '\n')
             file.close
 
-def create_diff(file_1, file_2, output_file):
-    with open (file_1, 'r') as left_file:
-        data_left = left_file.readlines()
-        data_left = [x.strip('\n') for x in data_left]
+def diff_dirs(dir_left, dir_right, output_file):
 
-    with open(file_2, 'r') as right_file:
-        data_right = right_file.readlines()
-        data_right = [x.strip('\n') for x in data_right]
+    '''os.path.realpath('./')
+    dir_left - notes directory
+    dir_right - last backup directory'''
 
-    file_handle = open(output_file, 'a+')
+    def create_diff(file_1, file_2, output_file):
+        with open (file_1, 'r') as left_file:
+            data_left = left_file.readlines()
+            data_left = [x.strip('\n') for x in data_left]
 
-    for line in difflib.unified_diff(data_left, data_right):
-        file_handle.write(line + '\n')
+        with open(file_2, 'r') as right_file:
+            data_right = right_file.readlines()
+            data_right = [x.strip('\n') for x in data_right]
 
-    file_handle.close
+        file_handle = open(output_file, 'a+')
+
+        for line in difflib.unified_diff(data_left, data_right):
+            file_handle.write(line + '\n')
+
+        file_handle.close
 
 if force_backup or not os.path.exists(new_dir):
     if force_backup:
         shutil.rmtree(new_dir)
+        last_backup = available_backups[-2]
     shutil.copytree(notes_path, new_dir)
     create_line_count(notes_path, lines_count)
 else:
