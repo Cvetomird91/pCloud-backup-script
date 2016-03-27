@@ -21,12 +21,14 @@ date = datetime.datetime.now()
 current_date = date.strftime('%d.%m.%Y')
 new_dir = drive_path + 'notes-' + current_date + '/'
 lines_count = new_dir + 'lines_count-' + current_date
-changes_file = 'changes-' + current_date
+changes_file = new_dir + 'changes-' + current_date
 
 for file in files:
     matchObj = re.match(r'^notes-\d{2}\.\d{2}\.\d{4}$', file)
     if matchObj:
         available_backups.append(file)
+
+available_backups = [drive_path + available for available in available_backups]
 
 last_backup = available_backups[-1]
 
@@ -42,7 +44,8 @@ if args.available:
     sys.exit(0)
 
 def create_line_count(directory, line_count_file):
-    directory = os.path.realpath(directory)
+    os.chdir(directory)
+    #directory = os.path.realpath(directory)
     for filename in os.listdir(directory):
         if filename != line_count_file and not os.path.isdir(filename):
             num_lines = sum(1 for line in open(filename))
@@ -51,11 +54,10 @@ def create_line_count(directory, line_count_file):
             file.write(line_count + '\n')
             file.close
 
-def diff_dirs(dir_left, dir_right, output_file):
+def diff_dir(dir_left, dir_right, output_file):
 
-    '''os.path.realpath('./')
-    dir_left - notes directory
-    dir_right - last backup directory'''
+    dir_left = os.path.realpath(dir_left)
+    dir_right = os.path.realpath(dir_right)
 
     def create_diff(file_1, file_2, output_file):
         with open (file_1, 'r') as left_file:
@@ -73,11 +75,22 @@ def diff_dirs(dir_left, dir_right, output_file):
 
         file_handle.close
 
+    files_left = os.listdir(dir_left)
+
+    for filename in files_left:
+        if not re.match(r'line_*', filename) and not re.match(r'changes-*', filename):
+            file_left = dir_left + '/' + filename
+            file_right = dir_right + '/' + filename
+            if os.path.isfile(file_left):
+                create_diff(file_left, file_right, output_file)
+
 if force_backup or not os.path.exists(new_dir):
+    os.chdir(drive_path)
     if force_backup:
-        shutil.rmtree(new_dir)
+        shutil.rmtree(last_backup)
         last_backup = available_backups[-2]
     shutil.copytree(notes_path, new_dir)
+    diff_dir(last_backup, new_dir, changes_file)
     create_line_count(notes_path, lines_count)
 else:
     print('Daily backup already created!')
