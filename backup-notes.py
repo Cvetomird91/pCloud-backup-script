@@ -45,7 +45,6 @@ if args.available:
 
 def create_line_count(directory, line_count_file):
     os.chdir(directory)
-    #directory = os.path.realpath(directory)
     for filename in os.listdir(directory):
         if filename != line_count_file and not os.path.isdir(filename):
             num_lines = sum(1 for line in open(filename))
