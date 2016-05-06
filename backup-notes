@@ -32,6 +32,9 @@ case "$OPTS" in
 		exit;
 		;;
 		-l|--local)
+		if [ ! -d "$LOCAL_NOTES_DIR" ]; then
+			mkdir -v "$LOCAL_NOTES_DIR";
+		fi
 		rsync -av "$NOTES_DIR" "$LOCAL_NOTES_DIR"
 		exit;
 		;;
