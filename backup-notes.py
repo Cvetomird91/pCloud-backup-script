@@ -5,6 +5,7 @@ import shutil
 import datetime
 import re
 import difflib
+import filecmp
 import argparse
 import sys
 
@@ -12,6 +13,7 @@ user_home = os.getenv("HOME")
 drive_dir = '/pCloudDrive/'
 drive_path = user_home + drive_dir
 notes_path = drive_path + 'notes/'
+local_notes_path = user_home + '/notes/'
 
 notes = os.listdir(notes_path)
 files = os.listdir(drive_path)
@@ -35,12 +37,19 @@ last_backup = available_backups[-1]
 arguments = argparse.ArgumentParser(description='Process options')
 arguments.add_argument('--available', '-a', action='store_true')
 arguments.add_argument('--force', '-f', action='store_true')
+arguments.add_argument('--local', '-l', action='store_true')
 args = arguments.parse_args()
 force_backup = args.force
 
 if args.available:
     for backup in available_backups:
         print(backup)
+    sys.exit(0)
+
+if args.local:
+    for note in notes:
+        if not filecmp.cmp(local_notes_path + note, notes_path + note, False):
+            shutil.copy(notes_path + note, local_notes_path)
     sys.exit(0)
 
 def create_line_count(directory, line_count_file):
